@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <script>
+        async function fetchData() {
+            try {
+                const helloResponse = await fetch('/hello');
+                const helloText = await helloResponse.text();
+                document.getElementById('hello').innerText = helloText;
+
+                const graphqlResponse = await fetch('/graphql?query={helloWorld}');
+                const graphqlData = await graphqlResponse.json();
+                document.getElementById('graphql').innerText = graphqlData.data.helloWorld;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        window.onload = fetchData;
+    </script>
+</head>
+<body>
+<h1>Home Page</h1>
+<p><strong>REST Endpoint:</strong> <span id="hello"></span></p>
+<p><strong>GraphQL Endpoint:</strong> <span id="graphql"></span></p>
+</body>
+</html>
