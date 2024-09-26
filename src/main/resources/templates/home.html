@@ -10,7 +10,13 @@
                 const helloText = await helloResponse.text();
                 document.getElementById('hello').innerText = helloText;
 
-                const graphqlResponse = await fetch('/graphql?query={helloWorld}');
+                const graphqlResponse = await fetch('/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query: '{ helloWorld }' })
+                });
                 const graphqlData = await graphqlResponse.json();
                 document.getElementById('graphql').innerText = graphqlData.data.helloWorld;
             } catch (error) {
