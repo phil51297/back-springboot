@@ -17,29 +17,32 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    // Configuration de la chaîne de filtres de sécurité
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // Configuration des autorisations de requêtes
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/graphql", "/hello").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/graphql", "/hello").authenticated() // Authentification requise pour /graphql et /hello
+                        .anyRequest().permitAll() // Autoriser toutes les autres requêtes
                 )
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults()) // Activer l'authentification basique
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Créer une session si nécessaire
                 )
                 .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
 
+    // Configuration du gestionnaire d'authentification
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder
                 .inMemoryAuthentication()
-                .withUser("user").password(passwordEncoder().encode("password")).roles("USER");
+                .withUser("user").password(passwordEncoder().encode("password")).roles("USER"); // Utilisateur en mémoire avec rôle USER
         return authenticationManagerBuilder.build();
     }
 
@@ -47,4 +50,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+}
 }
